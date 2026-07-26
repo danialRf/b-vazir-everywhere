@@ -2,3 +2,4 @@
 *.zip
 amo-source-*/
 web-ext-artifacts/
+.env.amo
