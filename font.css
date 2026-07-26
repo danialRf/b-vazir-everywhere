@@ -15,16 +15,10 @@
   font-display: block;
 }
 
-/* This is injected at document_start, so it also covers elements created later. */
-:root,
-:root * {
-  font-family: "B Vazir", "B Vazir Everywhere", Vazir, sans-serif !important;
-}
-
-/* Form controls sometimes retain the browser's UI font without this rule. */
-input,
-textarea,
-select,
-button {
+/*
+ * Only nodes classified as real text by font-enforcer.js receive this class.
+ * Icon fonts, code, math and SVG content keep their original fonts.
+ */
+.bve-font-applied {
   font-family: "B Vazir", "B Vazir Everywhere", Vazir, sans-serif !important;
 }

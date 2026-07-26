@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>B Vazir Everywhere</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main class="panel">
+      <header class="brand">
+        <div class="brand-copy">
+          <span class="eyebrow">تجربهٔ خواناتر وب</span>
+          <h1>بی وزیر</h1>
+        </div>
+        <div class="mark" aria-hidden="true">و</div>
+      </header>
+
+      <section class="master-card">
+        <div>
+          <strong>تغییر فونت</strong>
+          <p id="masterStatus">روی همهٔ سایت‌ها فعال است</p>
+        </div>
+        <label class="switch">
+          <input id="masterToggle" type="checkbox">
+          <span class="slider"></span>
+          <span class="sr-only">روشن یا خاموش کردن افزونه</span>
+        </label>
+      </section>
+
+      <section class="site-card">
+        <div class="site-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0c2.1-2.15 3.2-5.14 3.2-9S14.1 5.15 12 3m0 18c-2.1-2.15-3.2-5.14-3.2-9S9.9 5.15 12 3M3.5 9h17m-17 6h17"/></svg>
+        </div>
+        <div class="site-copy">
+          <span>سایت فعلی</span>
+          <strong id="siteName">—</strong>
+        </div>
+        <label class="switch small">
+          <input id="siteToggle" type="checkbox">
+          <span class="slider"></span>
+          <span class="sr-only">فعال‌سازی برای سایت فعلی</span>
+        </label>
+      </section>
+
+      <div class="font-preview">
+        <span>فونت فعال</span>
+        <strong>Vazir</strong>
+        <p>وب فارسی، ساده‌تر و خواناتر</p>
+      </div>
+
+      <footer>
+        <span class="privacy-dot"></span>
+        بدون جمع‌آوری یا ارسال اطلاعات
+      </footer>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>

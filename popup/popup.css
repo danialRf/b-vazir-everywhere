@@ -1,0 +1,187 @@
+@font-face {
+  font-family: "BVE";
+  src: url("../fonts/Vazir-Regular.woff2") format("woff2");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "BVE";
+  src: url("../fonts/Vazir-Bold.woff2") format("woff2");
+  font-weight: 700;
+}
+
+:root {
+  color-scheme: light;
+  font-family: "BVE", sans-serif;
+  color: #18181b;
+  background: #f4f4f5;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  width: 348px;
+  margin: 0;
+  background: #f4f4f5;
+}
+
+.panel {
+  padding: 20px;
+  background:
+    radial-gradient(circle at 10% -5%, rgba(239, 68, 68, .14), transparent 34%),
+    #f4f4f5;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.brand-copy { display: grid; gap: 2px; }
+.eyebrow { color: #71717a; font-size: 11px; }
+h1 { margin: 0; font-size: 25px; letter-spacing: -.8px; }
+
+.mark {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  color: white;
+  background: linear-gradient(145deg, #ef4444, #dc2626);
+  box-shadow: 0 9px 24px rgba(220, 38, 38, .25);
+  font-size: 27px;
+  font-weight: 700;
+}
+
+.master-card,
+.site-card,
+.font-preview {
+  border: 1px solid #e4e4e7;
+  background: rgba(255, 255, 255, .92);
+  box-shadow: 0 4px 18px rgba(24, 24, 27, .05);
+}
+
+.master-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-radius: 18px;
+}
+
+.master-card strong { font-size: 16px; }
+.master-card p { margin: 3px 0 0; color: #71717a; font-size: 11px; }
+
+.site-card {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 11px;
+  align-items: center;
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 16px;
+}
+
+.site-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  color: #52525b;
+  background: #f4f4f5;
+}
+
+.site-icon svg {
+  width: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.site-copy { display: grid; min-width: 0; }
+.site-copy span { color: #71717a; font-size: 10px; }
+.site-copy strong {
+  overflow: hidden;
+  font-size: 12px;
+  direction: ltr;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.font-preview {
+  position: relative;
+  overflow: hidden;
+  margin-top: 10px;
+  padding: 15px 16px;
+  border-radius: 16px;
+}
+
+.font-preview::after {
+  content: "و";
+  position: absolute;
+  left: 14px;
+  top: -18px;
+  color: rgba(239, 68, 68, .07);
+  font-size: 92px;
+  font-weight: 700;
+}
+
+.font-preview span { display: block; color: #71717a; font-size: 10px; }
+.font-preview strong { color: #dc2626; font-size: 20px; }
+.font-preview p { margin: 3px 0 0; color: #52525b; font-size: 12px; }
+
+.switch { position: relative; display: inline-flex; }
+.switch input { position: absolute; opacity: 0; pointer-events: none; }
+.slider {
+  position: relative;
+  width: 48px;
+  height: 28px;
+  border-radius: 999px;
+  background: #d4d4d8;
+  transition: .2s ease;
+  cursor: pointer;
+}
+.slider::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, .18);
+  transition: .2s ease;
+}
+.switch input:checked + .slider { background: #ef4444; }
+.switch input:checked + .slider::after { transform: translateX(-20px); }
+.switch input:focus-visible + .slider { outline: 3px solid rgba(239, 68, 68, .25); }
+.switch.small .slider { width: 40px; height: 24px; }
+.switch.small .slider::after { width: 16px; height: 16px; }
+.switch.small input:checked + .slider::after { transform: translateX(-16px); }
+.switch input:disabled + .slider { opacity: .45; cursor: not-allowed; }
+
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 15px;
+  color: #71717a;
+  font-size: 10px;
+}
+.privacy-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
