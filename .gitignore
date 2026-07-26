@@ -1,2 +1,4 @@
 *.xpi
 *.zip
+amo-source-*/
+web-ext-artifacts/
