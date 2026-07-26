@@ -16,9 +16,42 @@
 }
 
 /*
- * Only nodes classified as real text by font-enforcer.js receive this class.
- * Icon fonts, code, math and SVG content keep their original fonts.
+ * One root class controls the whole page. New content is covered by CSS itself,
+ * so no DOM scanning or MutationObserver is needed.
  */
-.bve-font-applied {
+html.bve-font-enabled body,
+html.bve-font-enabled body :where(*):not(
+  code,
+  pre,
+  kbd,
+  samp,
+  svg,
+  svg *,
+  math,
+  math *,
+  [data-icon],
+  [role="img"],
+  .material-icons,
+  .material-icons-outlined,
+  .material-icons-round,
+  .material-icons-sharp,
+  .material-icons-two-tone,
+  [class*="material-symbols"],
+  [class~="glyphicon"],
+  [class*="glyphicon-"],
+  [class~="fa"],
+  [class~="fas"],
+  [class~="far"],
+  [class~="fab"],
+  [class~="fal"],
+  [class~="fad"],
+  [class*="fa-"],
+  [class~="bi"],
+  [class*="bi-"],
+  [class*="katex"],
+  [class*="MathJax"],
+  [class*="mathjax"],
+  [class*="mjx"]
+) {
   font-family: "B Vazir", "B Vazir Everywhere", Vazir, sans-serif !important;
 }
