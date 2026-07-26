@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const FONT = '"B Vazir", Vazir, sans-serif';
+  const FONT = '"B Vazir", "B Vazir Everywhere", Vazir, sans-serif';
   const STYLE_ID = "b-vazir-everywhere-style";
 
   function enforceInOpenShadowRoots(root) {
