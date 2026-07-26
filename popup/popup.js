@@ -35,9 +35,26 @@
   }
 
   async function notifyTabs() {
+    const settings = await browser.storage.local.get({
+      enabled: true,
+      disabledSites: {}
+    });
     const tabs = await browser.tabs.query({});
     await Promise.allSettled(
-      tabs.map((tab) => browser.tabs.sendMessage(tab.id, { type: "bve-refresh" }))
+      tabs.map((tab) => {
+        let tabHostname = "";
+        try {
+          tabHostname = new URL(tab.url).hostname;
+        } catch {
+          return Promise.resolve();
+        }
+        const tabEnabled =
+          settings.enabled && !settings.disabledSites[tabHostname];
+        return browser.tabs.sendMessage(tab.id, {
+          type: "bve-set-enabled",
+          enabled: tabEnabled
+        });
+      })
     );
   }
 

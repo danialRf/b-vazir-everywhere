@@ -101,21 +101,30 @@
     scan(root);
   }
 
+  function setState(nextEnabled) {
+    enabled = Boolean(nextEnabled);
+    if (enabled) {
+      observeRoot(document.documentElement);
+      scan(document.documentElement);
+    } else {
+      clear(document);
+    }
+  }
+
   async function refresh() {
     const settings = await browser.storage.local.get({
       enabled: true,
       disabledSites: {}
     });
-    enabled = settings.enabled && !settings.disabledSites[hostname];
-    if (enabled) {
-      observeRoot(document.documentElement);
-      scan(document.documentElement);
-    }
-    else clear(document);
+    setState(settings.enabled && !settings.disabledSites[hostname]);
   }
 
   browser.storage.onChanged.addListener(refresh);
   browser.runtime.onMessage.addListener((message) => {
+    if (message?.type === "bve-set-enabled") {
+      setState(message.enabled);
+      return Promise.resolve({ enabled });
+    }
     if (message?.type === "bve-refresh") return refresh();
   });
 
