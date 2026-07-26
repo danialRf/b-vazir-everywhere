@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "B Vazir Everywhere",
+  "version": "1.0.0",
+  "description": "Uses B Vazir for the text on every website, including content added after load.",
+  "permissions": [],
+  "host_permissions": ["<all_urls>"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "css": ["font.css"],
+      "js": ["font-enforcer.js"],
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_about_blank": true
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "b-vazir-everywhere@example.com",
+      "strict_min_version": "109.0"
+    }
+  }
+}

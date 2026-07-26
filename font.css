@@ -1,0 +1,16 @@
+/*
+ * This is injected at document_start, so it also covers elements created later.
+ * B Vazir must be installed on the operating system for Firefox to use it.
+ */
+:root,
+:root * {
+  font-family: "B Vazir", Vazir, sans-serif !important;
+}
+
+/* Form controls sometimes retain the browser's UI font without this rule. */
+input,
+textarea,
+select,
+button {
+  font-family: "B Vazir", Vazir, sans-serif !important;
+}
