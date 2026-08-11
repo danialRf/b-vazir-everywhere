@@ -17,7 +17,7 @@
   "version": {
     "license": "MPL-2.0",
     "release_notes": {
-      "en-US": "Initial AMO release. Includes fast CSS-only font application, global and per-site toggles, bundled Vazir, and icon-font protection.",
+      "en-US": "Improves icon-font protection for Google apps and other sites using prefixed Material Icons classes, while keeping fast CSS-only font application.",
       "fa": "اولین انتشار در AMO؛ شامل اعمال سریع فونت با CSS، کلید کلی و مخصوص هر سایت، فونت وزیر همراه و محافظت از آیکن‌فونت‌ها."
     },
     "approval_notes": "This extension does not collect or transmit data and contains no remote code. The bundled Vazir font is from https://github.com/Rava-milad/vazir-font and is distributed under the SIL Open Font License 1.1 included at fonts/OFL.txt. To test: install the extension, open a regular website, use the toolbar popup to toggle the font globally or for the current domain, and verify the page font changes without reloading."
