@@ -29,8 +29,28 @@ html.bve-font-enabled body :where(*):not(
   svg *,
   math,
   math *,
+  i,
+  i *,
   [data-icon],
+  [data-icon] *,
+  [data-icon-name],
+  [data-icon-name] *,
+  [data-testid*="icon"],
+  [data-testid*="icon"] *,
+  [aria-hidden="true"],
+  [aria-hidden="true"] *,
   [role="img"],
+  [role="img"] *,
+  [class*="icon"],
+  [class*="icon"] *,
+  [class*="glyph"],
+  [class*="glyph"] *,
+  [class*="symbol"],
+  [class*="symbol"] *,
+  [class*="lucide"],
+  [class*="lucide"] *,
+  [class*="ph-"],
+  [class*="ph-"] *,
   [class*="material-icons"],
   [class*="material-icons"] *,
   [class*="google-symbols"],
@@ -62,7 +82,8 @@ html.bve-font-enabled body :where(*):not(
   [class*="katex"],
   [class*="MathJax"],
   [class*="mathjax"],
-  [class*="mjx"]
+  [class*="mjx"],
+  [class*="mjx"] *
 ) {
   font-family: "B Vazir", "B Vazir Everywhere", Vazir, sans-serif !important;
 }
