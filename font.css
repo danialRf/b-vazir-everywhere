@@ -31,6 +31,13 @@
  * One root class controls the whole page. New content is covered by CSS itself,
  * so no DOM scanning or MutationObserver is needed.
  */
+/*
+ * This layer is declared at document_start, before website stylesheets load.
+ * Important declarations in the first cascade layer outrank later website
+ * rules, including utility CSS used by modern single-page apps. That keeps
+ * the behavior universal without DOM scanning or site-specific selectors.
+ */
+@layer bve-font-override {
 html.bve-font-enabled body,
 html.bve-font-enabled body :where(*):not(
   code,
@@ -94,4 +101,5 @@ html.bve-font-enabled body :where(*):not(
   [class*="mjx"] *
 ) {
   font-family: "B Vazir", "B Vazir Everywhere", Vazir, sans-serif !important;
+}
 }

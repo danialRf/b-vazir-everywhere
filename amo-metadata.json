@@ -17,7 +17,7 @@
   "version": {
     "license": "MPL-2.0",
     "release_notes": {
-      "en-US": "Restores Vazir on accessible visual text, including ChatGPT responses, without treating every aria-hidden element as an icon.",
+      "en-US": "Uses a high-priority CSS cascade layer so Vazir applies consistently to all text in modern web apps while icon protections remain intact.",
       "fa": "اولین انتشار در AMO؛ شامل اعمال سریع فونت با CSS، کلید کلی و مخصوص هر سایت، فونت وزیر همراه و محافظت از آیکن‌فونت‌ها."
     },
     "approval_notes": "This extension does not collect or transmit data and contains no remote code. The bundled Vazir font is from https://github.com/Rava-milad/vazir-font and is distributed under the SIL Open Font License 1.1 included at fonts/OFL.txt. To test: install the extension, open a regular website, use the toolbar popup to toggle the font globally or for the current domain, and verify the page font changes without reloading."
