@@ -5,13 +5,6 @@
   font-style: normal;
   font-weight: 400;
   font-display: block;
-  /*
-   * Only Persian/Arabic glyphs come from Vazir. Everything else stays in the
-   * font selected by the website, preserving each site's Latin metrics,
-   * spacing, icon ligatures, and UI design.
-   */
-  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
-    U+FE70-FEFF, U+200C-200D;
 }
 
 @font-face {
@@ -20,25 +13,12 @@
   font-style: normal;
   font-weight: 700;
   font-display: block;
-  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF,
-    U+FE70-FEFF, U+200C-200D;
 }
 
 /*
  * One root class controls the whole page. New content is covered by CSS itself,
  * so no DOM scanning or MutationObserver is needed.
  */
-html.bve-font-enabled {
-  /*
-   * Widely used font variables are only fallbacks. If a site defines one,
-   * its own Latin/UI typeface remains intact; otherwise the browser's normal
-   * system sans-serif fallback is used. This is intentionally generic rather
-   * than tailored to a particular website.
-   */
-  --bve-site-font: var(--font-sans, var(--font-ui,
-    var(--font-body, var(--font-family, system-ui))));
-}
-
 html.bve-font-enabled body,
 html.bve-font-enabled body :where(*):not(
   code,
@@ -105,5 +85,5 @@ html.bve-font-enabled body :where(*):not(
   [class*="mjx"],
   [class*="mjx"] *
 ) {
-  font-family: "B Vazir Everywhere", var(--bve-site-font), sans-serif !important;
+  font-family: "B Vazir", "B Vazir Everywhere", Vazir, sans-serif !important;
 }
