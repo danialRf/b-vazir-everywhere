@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "B Vazir Everywhere",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "A safe, per-site Vazir font switcher for Firefox.",
   "permissions": ["storage", "tabs"],
   "host_permissions": ["<all_urls>"],
@@ -24,6 +24,14 @@
       "run_at": "document_start",
       "all_frames": true,
       "match_about_blank": true
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["shadow-hook.js"],
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_about_blank": true,
+      "world": "MAIN"
     }
   ],
   "browser_specific_settings": {

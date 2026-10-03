@@ -17,9 +17,9 @@
   "version": {
     "license": "MPL-2.0",
     "release_notes": {
-      "en-US": "Adds a targeted, low-overhead fallback for app text that uses stronger site font rules, including dynamically streamed content, while preserving icon fonts.",
-      "fa": "رفع اعمال‌نشدن فونت در متن‌های پویا یا بخش‌هایی با قانون فونت قوی‌تر؛ fallback فقط روی متن شکست‌خورده اجرا می‌شود و از آیکن‌فونت‌ها محافظت می‌کند."
+      "en-US": "Extends Vazir support into isolated Shadow DOM content and dynamically streamed app text while preserving icon fonts.",
+      "fa": "پشتیبانی از متن‌های ایزوله در Shadow DOM و محتوای پویای برنامه‌ها، همراه با محافظت از آیکن‌فونت‌ها."
     },
-    "approval_notes": "This extension does not collect or transmit data and contains no remote code. The bundled Vazir font is from https://github.com/Rava-milad/vazir-font and is distributed under the SIL Open Font License 1.1 included at fonts/OFL.txt. To test: install the extension, open a regular website, use the toolbar popup to toggle the font globally or for the current domain, and verify the page font changes without reloading."
+    "approval_notes": "This extension does not collect or transmit data and contains no remote code. A small document_start script in the page's MAIN world only announces when a web page creates a Shadow DOM root; it reads no page data and gives the isolated content script an opportunity to apply the bundled font inside that root. The bundled Vazir font is from https://github.com/Rava-milad/vazir-font and is distributed under the SIL Open Font License 1.1 included at fonts/OFL.txt. To test: install the extension, open a regular website, use the toolbar popup to toggle the font globally or for the current domain, and verify the page font changes without reloading."
   }
 }
