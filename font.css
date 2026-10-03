@@ -5,6 +5,15 @@
   font-style: normal;
   font-weight: 400;
   font-display: block;
+  /*
+   * Vazir's original vertical metrics are unusually tall (roughly 161% of
+   * its em square). Normalizing them prevents text from pushing inline UI
+   * controls, chips, and buttons out of alignment while keeping every glyph
+   * in Vazir.
+   */
+  ascent-override: 96%;
+  descent-override: 32%;
+  line-gap-override: 0%;
 }
 
 @font-face {
@@ -13,6 +22,9 @@
   font-style: normal;
   font-weight: 700;
   font-display: block;
+  ascent-override: 96%;
+  descent-override: 32%;
+  line-gap-override: 0%;
 }
 
 /*

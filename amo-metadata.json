@@ -17,7 +17,7 @@
   "version": {
     "license": "MPL-2.0",
     "release_notes": {
-      "en-US": "Restores Vazir for all text, including Persian and Latin, while preserving universal protections for icon fonts and UI glyphs.",
+      "en-US": "Normalizes Vazir's font metrics to keep all text in Vazir while preserving stable layout for inline controls, chips, and buttons across websites.",
       "fa": "اولین انتشار در AMO؛ شامل اعمال سریع فونت با CSS، کلید کلی و مخصوص هر سایت، فونت وزیر همراه و محافظت از آیکن‌فونت‌ها."
     },
     "approval_notes": "This extension does not collect or transmit data and contains no remote code. The bundled Vazir font is from https://github.com/Rava-milad/vazir-font and is distributed under the SIL Open Font License 1.1 included at fonts/OFL.txt. To test: install the extension, open a regular website, use the toolbar popup to toggle the font globally or for the current domain, and verify the page font changes without reloading."
