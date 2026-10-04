@@ -17,9 +17,9 @@
   "version": {
     "license": "MPL-2.0",
     "release_notes": {
-      "en-US": "Extends Vazir support into isolated Shadow DOM content and dynamically streamed app text while preserving icon fonts.",
-      "fa": "پشتیبانی از متن‌های ایزوله در Shadow DOM و محتوای پویای برنامه‌ها، همراه با محافظت از آیکن‌فونت‌ها."
+      "en-US": "Rebuilt font application: bundled font files now load correctly in web pages, all regular and dynamic text uses Vazir, broad exclusions were removed, icon fonts stay protected, and the popup reports the real page status and version.",
+      "fa": "بازطراحی کامل اعمال فونت: فایل‌های فونت همراه افزونه اکنون داخل صفحات درست بارگذاری می‌شوند، همهٔ متن‌های معمولی و پویا وزیر هستند، استثناهای گسترده حذف شده‌اند، آیکن‌ها سالم می‌مانند و پنل وضعیت واقعی را نشان می‌دهد."
     },
-    "approval_notes": "This extension does not collect or transmit data and contains no remote code. A small document_start script in the page's MAIN world only announces when a web page creates a Shadow DOM root; it reads no page data and gives the isolated content script an opportunity to apply the bundled font inside that root. The bundled Vazir font is from https://github.com/Rava-milad/vazir-font and is distributed under the SIL Open Font License 1.1 included at fonts/OFL.txt. To test: install the extension, open a regular website, use the toolbar popup to toggle the font globally or for the current domain, and verify the page font changes without reloading."
+    "approval_notes": "This extension does not collect or transmit data and contains no remote code. It toggles one class on the page root; CSS applies the bundled font to existing and future text. A small MAIN-world document_start hook emits a local DOM event when the page creates a ShadowRoot, allowing the isolated content script to inject the same local-only stylesheet into open and closed roots. It reads no page data. The popup can request a local-only status summary from the content script (counts and computed font state only); nothing is persisted or transmitted. The bundled Vazir font is from https://github.com/Rava-milad/vazir-font and is distributed under the SIL Open Font License 1.1 included at fonts/OFL.txt. To test: install the extension, open a regular website, use the toolbar popup to toggle the font globally or for the current domain, and verify the page font changes without reloading."
   }
 }

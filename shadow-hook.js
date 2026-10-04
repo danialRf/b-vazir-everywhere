@@ -2,16 +2,16 @@
   "use strict";
 
   const EVENT_NAME = "bve-shadow-root-attached";
-  const originalAttachShadow = Element.prototype.attachShadow;
+  const nativeAttachShadow = Element.prototype.attachShadow;
 
-  if (originalAttachShadow.__bveShadowHook) return;
+  if (nativeAttachShadow.__bveHooked) return;
 
-  function attachShadowWithNotification(init) {
-    const root = originalAttachShadow.call(this, init);
+  function attachShadow(init) {
+    const root = Reflect.apply(nativeAttachShadow, this, [init]);
     this.dispatchEvent(new CustomEvent(EVENT_NAME, { bubbles: true }));
     return root;
   }
 
-  Object.defineProperty(attachShadowWithNotification, "__bveShadowHook", { value: true });
-  Element.prototype.attachShadow = attachShadowWithNotification;
+  Object.defineProperty(attachShadow, "__bveHooked", { value: true });
+  Element.prototype.attachShadow = attachShadow;
 })();

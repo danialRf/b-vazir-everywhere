@@ -5,6 +5,10 @@
   const siteToggle = document.getElementById("siteToggle");
   const siteName = document.getElementById("siteName");
   const masterStatus = document.getElementById("masterStatus");
+  const fontPreview = document.querySelector(".font-preview");
+  const fontState = document.getElementById("fontState");
+  const fontDetails = document.getElementById("fontDetails");
+  const versionLabel = document.getElementById("versionLabel");
   let hostname = "";
 
   async function activeTab() {
@@ -14,6 +18,7 @@
 
   async function render() {
     const tab = await activeTab();
+    versionLabel.textContent = `v${browser.runtime.getManifest().version}`;
     try {
       hostname = new URL(tab.url).hostname;
     } catch {
@@ -32,6 +37,38 @@
     masterStatus.textContent = settings.enabled
       ? "روی همهٔ سایت‌های مجاز فعال است"
       : "افزونه فعلاً خاموش است";
+
+    if (!settings.enabled || settings.disabledSites[hostname]) {
+      fontPreview.dataset.state = "off";
+      fontState.textContent = "خاموش در این صفحه";
+      fontDetails.textContent = "با کلیدهای بالا دوباره فعالش کنید";
+      return;
+    }
+
+    try {
+      const status = await browser.tabs.sendMessage(tab.id, { type: "bve-get-status" });
+      if (!status?.enabled) throw new Error("inactive-content-script");
+
+      const applied = status.checkedTextElements - status.mismatchedTextElements;
+      if (status.fontLoaded && status.mismatchedTextElements === 0) {
+        fontPreview.dataset.state = "ok";
+        fontState.textContent = "Vazir اعمال شده";
+        fontDetails.textContent = `${applied} بخش متنی بررسی شد`;
+      } else {
+        fontPreview.dataset.state = "error";
+        fontState.textContent = "اعمال ناقص فونت";
+        fontDetails.textContent = `${status.mismatchedTextElements} بخش از ${status.checkedTextElements} بخش هنوز Vazir نیست`;
+      }
+    } catch {
+      const hasAccess = await browser.permissions
+        .contains({ origins: ["<all_urls>"] })
+        .catch(() => false);
+      fontPreview.dataset.state = "error";
+      fontState.textContent = hasAccess ? "صفحه را Reload کنید" : "دسترسی سایت خاموش است";
+      fontDetails.textContent = hasAccess
+        ? "این نسخه هنوز داخل تب فعلی لود نشده"
+        : "در تنظیمات Firefox، دسترسی همهٔ سایت‌ها را فعال کنید";
+    }
   }
 
   async function notifyTabs() {

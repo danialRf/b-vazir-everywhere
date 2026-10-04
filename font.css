@@ -1,49 +1,28 @@
-/* Bundled fallback: the extension works even when B Vazir is not system-installed. */
+/* The bundled family is deliberately unique so every installation renders the
+ * same font, regardless of similarly named fonts installed on the computer. */
 @font-face {
   font-family: "B Vazir Everywhere";
-  src: local("B Vazir"), url("fonts/Vazir-Regular.woff2") format("woff2");
+  src: url("fonts/Vazir-Regular.woff2") format("woff2");
   font-style: normal;
-  font-weight: 400;
-  font-display: block;
-  /*
-   * Vazir's original vertical metrics are unusually tall (roughly 161% of
-   * its em square). Normalizing them prevents text from pushing inline UI
-   * controls, chips, and buttons out of alignment while keeping every glyph
-   * in Vazir.
-   */
-  ascent-override: 96%;
-  descent-override: 32%;
-  line-gap-override: 0%;
+  font-weight: 100 600;
+  font-display: swap;
 }
 
 @font-face {
   font-family: "B Vazir Everywhere";
-  src: local("B Vazir"), url("fonts/Vazir-Bold.woff2") format("woff2");
+  src: url("fonts/Vazir-Bold.woff2") format("woff2");
   font-style: normal;
-  font-weight: 700;
-  font-display: block;
-  ascent-override: 96%;
-  descent-override: 32%;
-  line-gap-override: 0%;
+  font-weight: 601 900;
+  font-display: swap;
 }
 
 /*
- * One root class controls the whole page. New content is covered by CSS itself,
- * so no DOM scanning or MutationObserver is needed.
+ * CSS covers existing and future content by itself. The exclusions target the
+ * actual icon element only. In particular, aria-hidden containers and generic
+ * icon wrappers no longer exclude their entire descendant text tree.
  */
-/*
- * This layer is declared at document_start, before website stylesheets load.
- * Important declarations in the first cascade layer outrank later website
- * rules, including utility CSS used by modern single-page apps. That keeps
- * the behavior universal without DOM scanning or site-specific selectors.
- */
-@layer bve-font-override {
 html.bve-font-enabled body,
 html.bve-font-enabled body :where(*):not(
-  code,
-  pre,
-  kbd,
-  samp,
   svg,
   svg *,
   math,
@@ -52,54 +31,30 @@ html.bve-font-enabled body :where(*):not(
   [data-icon] *,
   [data-icon-name],
   [data-icon-name] *,
-  [data-testid*="icon"],
-  [data-testid*="icon"] *,
   [role="img"],
   [role="img"] *,
   [class*="icon"],
-  [class*="icon"] *,
   [class*="glyph"],
-  [class*="glyph"] *,
   [class*="symbol"],
-  [class*="symbol"] *,
   [class*="lucide"],
-  [class*="lucide"] *,
-  [class*="ph-"],
-  [class*="ph-"] *,
   [class*="material-icons"],
-  [class*="material-icons"] *,
-  [class*="google-symbols"],
-  [class*="google-symbols"] *,
   [class*="material-symbols"],
-  [class*="material-symbols"] *,
+  [class*="google-symbols"],
   [class~="glyphicon"],
-  [class~="glyphicon"] *,
   [class*="glyphicon-"],
-  [class*="glyphicon-"] *,
   [class~="fa"],
-  [class~="fa"] *,
   [class~="fas"],
-  [class~="fas"] *,
   [class~="far"],
-  [class~="far"] *,
   [class~="fab"],
-  [class~="fab"] *,
   [class~="fal"],
-  [class~="fal"] *,
   [class~="fad"],
-  [class~="fad"] *,
   [class*="fa-"],
-  [class*="fa-"] *,
   [class~="bi"],
-  [class~="bi"] *,
   [class*="bi-"],
-  [class*="bi-"] *,
   [class*="katex"],
   [class*="MathJax"],
   [class*="mathjax"],
-  [class*="mjx"],
-  [class*="mjx"] *
+  [class*="mjx"]
 ) {
-  font-family: "B Vazir", "B Vazir Everywhere", Vazir, sans-serif !important;
-}
+  font-family: "B Vazir Everywhere", sans-serif !important;
 }

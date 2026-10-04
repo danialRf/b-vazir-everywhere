@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="fa">
+  <head>
+    <meta charset="utf-8">
+    <title>BVE integration fixture</title>
+    <style>
+      body { font-family: Arial, sans-serif; }
+      .site-important { font-family: Georgia, serif !important; }
+      .material-icons { font-family: "Material Icons" !important; }
+    </style>
+  </head>
+  <body>
+    <p id="normal">متن معمولی normal text</p>
+    <p id="important" class="site-important">متن با قانون مهم important text</p>
+    <span id="icon" class="material-icons">home</span>
+    <div id="open-host"></div>
+    <div id="closed-host"></div>
+    <div id="dynamic-host"></div>
+    <script>
+      const openRoot = document.querySelector("#open-host").attachShadow({ mode: "open" });
+      openRoot.innerHTML = '<style>p { font-family: Georgia !important; }</style><p id="open-text">متن شدوی باز</p>';
+
+      const closedRoot = document.querySelector("#closed-host").attachShadow({ mode: "closed" });
+      closedRoot.innerHTML = '<style>p { font-family: Georgia !important; }</style><p id="closed-text">متن شدوی بسته</p>';
+
+      setTimeout(() => {
+        const dynamic = document.createElement("p");
+        dynamic.id = "dynamic-text";
+        dynamic.className = "site-important";
+        dynamic.textContent = "متن پویای جدید";
+        document.querySelector("#dynamic-host").append(dynamic);
+      }, 250);
+
+      const family = (element) => getComputedStyle(element).fontFamily;
+      setTimeout(() => {
+        const report = {
+          rootEnabled: document.documentElement.classList.contains("bve-font-enabled"),
+          fontLoaded: document.fonts.check('16px "B Vazir Everywhere"'),
+          normal: family(document.querySelector("#normal")),
+          important: family(document.querySelector("#important")),
+          icon: family(document.querySelector("#icon")),
+          openShadow: family(openRoot.querySelector("#open-text")),
+          closedShadow: family(closedRoot.querySelector("#closed-text")),
+          dynamic: family(document.querySelector("#dynamic-text")),
+          openShadowStyle: Boolean(openRoot.querySelector("#bve-shadow-font-style")),
+          closedShadowStyle: Boolean(closedRoot.querySelector("#bve-shadow-font-style"))
+        };
+        document.title = JSON.stringify(report);
+      }, 1800);
+    </script>
+  </body>
+</html>

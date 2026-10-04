@@ -2,299 +2,136 @@
   "use strict";
 
   const ROOT_CLASS = "bve-font-enabled";
+  const FONT_NAME = "B Vazir Everywhere";
   const SHADOW_EVENT = "bve-shadow-root-attached";
-  const FONT_STACK = '"B Vazir", "B Vazir Everywhere", Vazir, sans-serif';
   const SHADOW_STYLE_ID = "bve-shadow-font-style";
-  const SHADOW_FONT_CSS = `
+  const hostname = location.hostname;
+  const shadowStyles = new Map();
+  let enabled = false;
+  const protectedSelector = [
+    "svg",
+    "math",
+    "[data-icon]",
+    "[data-icon-name]",
+    '[role="img"]',
+    '[class*="icon"]',
+    '[class*="glyph"]',
+    '[class*="symbol"]',
+    '[class*="lucide"]',
+    '[class*="material-icons"]',
+    '[class*="material-symbols"]',
+    '[class*="google-symbols"]',
+    '[class~="glyphicon"]',
+    '[class*="glyphicon-"]',
+    '[class~="fa"]',
+    '[class~="fas"]',
+    '[class~="far"]',
+    '[class~="fab"]',
+    '[class~="fal"]',
+    '[class~="fad"]',
+    '[class*="fa-"]',
+    '[class~="bi"]',
+    '[class*="bi-"]',
+    '[class*="katex"]',
+    '[class*="MathJax"]',
+    '[class*="mathjax"]',
+    '[class*="mjx"]'
+  ].join(",");
+
+  const shadowFontCss = `
+    @font-face {
+      font-family: "${FONT_NAME}";
+      src: url("${browser.runtime.getURL("fonts/Vazir-Regular.woff2")}") format("woff2");
+      font-style: normal;
+      font-weight: 100 600;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "${FONT_NAME}";
+      src: url("${browser.runtime.getURL("fonts/Vazir-Bold.woff2")}") format("woff2");
+      font-style: normal;
+      font-weight: 601 900;
+      font-display: swap;
+    }
     :host,
     :host :where(*):not(
-      code, pre, kbd, samp, svg, svg *, math, math *,
+      svg, svg *, math, math *,
       [data-icon], [data-icon] *, [data-icon-name], [data-icon-name] *,
-      [role="img"], [role="img"] *, [class*="icon"], [class*="icon"] *,
-      [class*="glyph"], [class*="glyph"] *, [class*="symbol"], [class*="symbol"] *,
-      [class*="lucide"], [class*="lucide"] *, [class*="material-icons"], [class*="material-icons"] *,
-      [class*="material-symbols"], [class*="material-symbols"] *, [class*="google-symbols"], [class*="google-symbols"] *,
-      [class~="fa"], [class~="fa"] *, [class~="fas"], [class~="fas"] *, [class~="far"], [class~="far"] *,
-      [class~="fab"], [class~="fab"] *, [class~="fal"], [class~="fal"] *, [class~="fad"], [class~="fad"] *,
-      [class*="fa-"], [class*="fa-"] *, [class~="bi"], [class~="bi"] *,
-      [class*="bi-"], [class*="bi-"] *, [class*="katex"], [class*="MathJax"], [class*="mathjax"],
-      [class*="mjx"], [class*="mjx"] *
+      [role="img"], [role="img"] *, [class*="icon"], [class*="glyph"],
+      [class*="symbol"], [class*="lucide"], [class*="material-icons"],
+      [class*="material-symbols"], [class*="google-symbols"],
+      [class~="glyphicon"], [class*="glyphicon-"], [class~="fa"],
+      [class~="fas"], [class~="far"], [class~="fab"], [class~="fal"],
+      [class~="fad"], [class*="fa-"], [class~="bi"], [class*="bi-"],
+      [class*="katex"], [class*="MathJax"], [class*="mathjax"], [class*="mjx"]
     ) {
-      font-family: ${FONT_STACK} !important;
+      font-family: "${FONT_NAME}", sans-serif !important;
     }
   `;
-  const hostname = location.hostname;
-  const overriddenElements = new Map();
-  const pendingElements = new Set();
-  const pendingTextWalkers = [];
-  const pendingElementWalkers = [];
-  const shadowStyles = new Map();
-  const iconClassPattern =
-    /(?:^|[-_\s])(icon|glyph|symbol|lucide|material-icons|material-symbols|google-symbols|glyphicon|fa[brsld]?|bi)(?:$|[-_\s])/i;
-  const iconFontPattern =
-    /(?:icon|glyph|symbol|awesome|material|lucide|bootstrap-icons|phosphor)/i;
-  let isEnabled = false;
-  let isObserving = false;
-  let flushScheduled = false;
-
-  function hasOurFont(element) {
-    const family = getComputedStyle(element).fontFamily.toLowerCase();
-    return family.includes("b vazir") || family.includes("vazir");
-  }
-
-  function isProtectedElement(element) {
-    if (!(element instanceof HTMLElement)) return true;
-
-    for (let current = element; current && current !== document.body; current = current.parentElement) {
-      const tag = current.tagName;
-      if (
-        tag === "CODE" ||
-        tag === "PRE" ||
-        tag === "KBD" ||
-        tag === "SAMP" ||
-        tag === "STYLE" ||
-        tag === "SCRIPT" ||
-        tag === "NOSCRIPT" ||
-        tag === "TEMPLATE" ||
-        tag === "SVG" ||
-        tag === "MATH" ||
-        current.dataset.icon !== undefined ||
-        current.dataset.iconName !== undefined ||
-        current.getAttribute("role") === "img" ||
-        iconClassPattern.test(current.className)
-      ) {
-        return true;
-      }
-    }
-
-    return iconFontPattern.test(getComputedStyle(element).fontFamily);
-  }
-
-  function applyInlineFallback(element) {
-    if (!isEnabled || !element.isConnected || isProtectedElement(element) || hasOurFont(element)) {
-      return;
-    }
-
-    if (!overriddenElements.has(element)) {
-      overriddenElements.set(element, {
-        value: element.style.getPropertyValue("font-family"),
-        priority: element.style.getPropertyPriority("font-family")
-      });
-    }
-
-    element.style.setProperty("font-family", FONT_STACK, "important");
-  }
-
-  function flushPending() {
-    flushScheduled = false;
-    if (!isEnabled) {
-      pendingElements.clear();
-      pendingTextWalkers.length = 0;
-      pendingElementWalkers.length = 0;
-      return;
-    }
-
-    const startedAt = performance.now();
-    while (pendingElementWalkers.length) {
-      const walker = pendingElementWalkers[0];
-      const element = walker.nextNode();
-      if (!element) {
-        pendingElementWalkers.shift();
-      } else {
-        installShadowStyle(element);
-      }
-
-      if (performance.now() - startedAt > 8) {
-        scheduleFlush();
-        return;
-      }
-    }
-
-    while (pendingTextWalkers.length) {
-      const walker = pendingTextWalkers[0];
-      const textNode = walker.nextNode();
-      if (!textNode) {
-        pendingTextWalkers.shift();
-      } else if (textNode.nodeValue?.trim()) {
-        pendingElements.add(textNode.parentElement);
-      }
-
-      if (performance.now() - startedAt > 8) {
-        scheduleFlush();
-        return;
-      }
-    }
-
-    for (const element of pendingElements) {
-      pendingElements.delete(element);
-      applyInlineFallback(element);
-
-      // Keep fallback work below one animation frame even on pages that add a
-      // large amount of content at once.
-      if (performance.now() - startedAt > 8) {
-        scheduleFlush();
-        break;
-      }
-    }
-  }
-
-  function scheduleFlush() {
-    if (!isEnabled || flushScheduled) return;
-    flushScheduled = true;
-
-    if (typeof requestIdleCallback === "function") {
-      requestIdleCallback(flushPending, { timeout: 120 });
-    } else {
-      requestAnimationFrame(flushPending);
-    }
-  }
-
-  function queueElement(element) {
-    if (!isEnabled || !(element instanceof HTMLElement)) return;
-    pendingElements.add(element);
-    scheduleFlush();
-  }
-
-  function queueTextParents(node) {
-    if (!isEnabled) return;
-
-    if (node.nodeType === Node.TEXT_NODE) {
-      if (node.nodeValue?.trim()) queueElement(node.parentElement);
-      return;
-    }
-
-    if (
-      node.nodeType !== Node.ELEMENT_NODE &&
-      node.nodeType !== Node.DOCUMENT_FRAGMENT_NODE &&
-      node.nodeType !== Node.DOCUMENT_NODE
-    ) {
-      return;
-    }
-    pendingTextWalkers.push(document.createTreeWalker(node, NodeFilter.SHOW_TEXT));
-    scheduleFlush();
-  }
 
   function getShadowRoot(element) {
     try {
-      // Firefox exposes closed roots to extension content scripts through this
-      // property. Other browsers expose open roots through shadowRoot.
       return element.openOrClosedShadowRoot || element.shadowRoot || null;
     } catch {
       return null;
     }
   }
 
-  function observeRoot(root) {
-    observer.observe(root, { childList: true, subtree: true, characterData: true });
-  }
-
   function installShadowStyle(element) {
-    if (!(element instanceof HTMLElement)) return;
+    if (!enabled || !(element instanceof HTMLElement)) return;
     const root = getShadowRoot(element);
     if (!root || shadowStyles.has(root)) return;
 
     const style = document.createElement("style");
     style.id = SHADOW_STYLE_ID;
-    style.textContent = SHADOW_FONT_CSS;
-    root.appendChild(style);
+    style.textContent = shadowFontCss;
+    root.append(style);
     shadowStyles.set(root, style);
-
-    if (isObserving) observeRoot(root);
-    queueTextParents(root);
-    queueShadowRootDiscovery(root);
+    shadowObserver.observe(root, { childList: true, subtree: true });
+    discoverShadowRoots(root);
   }
 
-  function queueShadowRootDiscovery(node) {
-    if (!isEnabled) return;
-
-    if (node.nodeType === Node.ELEMENT_NODE) {
-      installShadowStyle(node);
-    }
-
-    if (
-      node.nodeType !== Node.ELEMENT_NODE &&
-      node.nodeType !== Node.DOCUMENT_FRAGMENT_NODE &&
-      node.nodeType !== Node.DOCUMENT_NODE
-    ) {
+  function discoverShadowRoots(node) {
+    if (!enabled) return;
+    if (node.nodeType === Node.ELEMENT_NODE) installShadowStyle(node);
+    if (![Node.ELEMENT_NODE, Node.DOCUMENT_NODE, Node.DOCUMENT_FRAGMENT_NODE].includes(node.nodeType)) {
       return;
     }
 
-    pendingElementWalkers.push(document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT));
-    scheduleFlush();
+    const walker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT);
+    let element;
+    while ((element = walker.nextNode())) installShadowStyle(element);
   }
 
-  function removeShadowStyles() {
+  const shadowObserver = new MutationObserver((records) => {
+    for (const record of records) {
+      for (const node of record.addedNodes) discoverShadowRoots(node);
+    }
+  });
+
+  function startShadowSupport() {
+    shadowObserver.observe(document, { childList: true, subtree: true });
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => discoverShadowRoots(document), { once: true });
+    } else {
+      discoverShadowRoots(document);
+    }
+  }
+
+  function stopShadowSupport() {
+    shadowObserver.disconnect();
     for (const style of shadowStyles.values()) style.remove();
     shadowStyles.clear();
   }
 
-  function restoreInlineFallbacks() {
-    for (const [element, original] of overriddenElements) {
-      if (
-        element.isConnected &&
-        element.style.getPropertyValue("font-family") === FONT_STACK &&
-        element.style.getPropertyPriority("font-family") === "important"
-      ) {
-        if (original.value) {
-          element.style.setProperty("font-family", original.value, original.priority);
-        } else {
-          element.style.removeProperty("font-family");
-        }
-      }
-    }
-    overriddenElements.clear();
-  }
+  function setState(nextState) {
+    const shouldEnable = Boolean(nextState);
+    document.documentElement.classList.toggle(ROOT_CLASS, shouldEnable);
+    if (enabled === shouldEnable) return;
 
-  const observer = new MutationObserver((records) => {
-    if (!isEnabled) return;
-
-    for (const record of records) {
-      if (record.type === "characterData") {
-        queueTextParents(record.target);
-      } else {
-        for (const node of record.addedNodes) {
-          queueTextParents(node);
-          queueShadowRootDiscovery(node);
-        }
-      }
-    }
-  });
-
-  document.addEventListener(SHADOW_EVENT, (event) => {
-    queueShadowRootDiscovery(event.target);
-  });
-
-  function startFallback() {
-    if (!isObserving) {
-      observer.observe(document, { childList: true, subtree: true, characterData: true });
-      isObserving = true;
-    }
-
-    if (document.body) queueTextParents(document.body);
-    else document.addEventListener("DOMContentLoaded", () => queueTextParents(document.body), { once: true });
-    queueShadowRootDiscovery(document);
-  }
-
-  function stopFallback() {
-    pendingElements.clear();
-    pendingTextWalkers.length = 0;
-    pendingElementWalkers.length = 0;
-    if (isObserving) {
-      observer.disconnect();
-      isObserving = false;
-    }
-    removeShadowStyles();
-    restoreInlineFallbacks();
-  }
-
-  function setState(enabled) {
-    const nextState = Boolean(enabled);
-    document.documentElement?.classList.toggle(ROOT_CLASS, nextState);
-
-    if (isEnabled === nextState) return;
-    isEnabled = nextState;
-    if (isEnabled) startFallback();
-    else stopFallback();
+    enabled = shouldEnable;
+    if (enabled) startShadowSupport();
+    else stopShadowSupport();
   }
 
   async function refresh() {
@@ -305,13 +142,60 @@
     setState(settings.enabled && !settings.disabledSites[hostname]);
   }
 
+  function isProtected(element) {
+    return Boolean(element.closest(protectedSelector));
+  }
+
+  function hasVazir(element) {
+    return getComputedStyle(element).fontFamily.toLowerCase().includes(FONT_NAME.toLowerCase());
+  }
+
+  async function getStatus() {
+    await document.fonts.load(`16px "${FONT_NAME}"`);
+
+    let checkedTextElements = 0;
+    let mismatchedTextElements = 0;
+    if (document.body) {
+      const seen = new Set();
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      let textNode;
+      while ((textNode = walker.nextNode()) && checkedTextElements < 500) {
+        const element = textNode.parentElement;
+        if (
+          !element ||
+          !textNode.nodeValue?.trim() ||
+          seen.has(element) ||
+          isProtected(element) ||
+          ["SCRIPT", "STYLE", "NOSCRIPT", "TEMPLATE"].includes(element.tagName)
+        ) {
+          continue;
+        }
+
+        seen.add(element);
+        checkedTextElements += 1;
+        if (!hasVazir(element)) mismatchedTextElements += 1;
+      }
+    }
+
+    return {
+      enabled: document.documentElement.classList.contains(ROOT_CLASS),
+      fontLoaded: document.fonts.check(`16px "${FONT_NAME}"`),
+      bodyFont: document.body ? getComputedStyle(document.body).fontFamily : "",
+      checkedTextElements,
+      mismatchedTextElements
+    };
+  }
+
   browser.storage.onChanged.addListener(refresh);
+  document.addEventListener(SHADOW_EVENT, (event) => installShadowStyle(event.target));
   browser.runtime.onMessage.addListener((message) => {
     if (message?.type === "bve-set-enabled") {
       setState(message.enabled);
-      return Promise.resolve({ enabled: Boolean(message.enabled) });
+      return getStatus();
     }
     if (message?.type === "bve-refresh") return refresh();
+    if (message?.type === "bve-get-status") return getStatus();
+    return undefined;
   });
 
   refresh();

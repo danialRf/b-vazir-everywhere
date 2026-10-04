@@ -136,6 +136,9 @@ h1 { margin: 0; font-size: 25px; letter-spacing: -.8px; }
 .font-preview span { display: block; color: #71717a; font-size: 10px; }
 .font-preview strong { color: #dc2626; font-size: 20px; }
 .font-preview p { margin: 3px 0 0; color: #52525b; font-size: 12px; }
+.font-preview[data-state="ok"] strong { color: #16a34a; }
+.font-preview[data-state="off"] strong { color: #71717a; }
+.font-preview[data-state="error"] strong { color: #dc2626; font-size: 16px; }
 
 .switch { position: relative; display: inline-flex; }
 .switch input { position: absolute; opacity: 0; pointer-events: none; }
@@ -177,6 +180,7 @@ footer {
   color: #71717a;
   font-size: 10px;
 }
+.version { direction: ltr; }
 .privacy-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; }
 .sr-only {
   position: absolute;
